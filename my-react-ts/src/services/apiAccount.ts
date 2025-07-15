@@ -32,6 +32,29 @@ export interface IResetPasswordRequest {
     email: string;
 }
 
+// 🔄 Уніфікована логіка обробки авторизації
+const handleAuthSuccess = async (
+    queryFulfilled: Promise<{ data: IAuthResponse }>,
+    dispatch: Dispatch,
+    getState: () => RootState
+) => {
+    try {
+        const { data } = await queryFulfilled;
+        if (data?.token) {
+            dispatch(loginSuccess(data.token));
+
+            const localCart = getState().localCart.items;
+            if (localCart.length > 0) {
+                await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
+            }
+
+            dispatch(clearCart());
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+};
+
 export const apiAccount = createApi({
     reducerPath: 'api/account',
     baseQuery: createBaseQuery('account'),
@@ -43,27 +66,9 @@ export const apiAccount = createApi({
                 method: 'POST',
                 body: credentials,
             }),
-            async onQueryStarted(_arg : any, {dispatch, getState, queryFulfilled}: {
-                dispatch: Dispatch;
-                getState: () => RootState;
-                queryFulfilled: Promise<{ data: IAuthResponse }>;
-            }) {
-                try {
-                    console.log('onQueryStarted');
-                    const {data} = await queryFulfilled;
-                    if (data && data.token) {
-                        dispatch(loginSuccess(data.token));
-                        const localCart = getState().localCart.items;
-                        console.log("Get Root State", localCart);
-                        if (localCart.length > 0) {
-                            await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
-                        }
-                        dispatch(clearCart());
-                    }
-                } catch (error) {
-                    console.error('Auth error:', error);
-                }
-            }
+            onQueryStarted: async (_arg, { dispatch, getState, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch, getState)
+
 
         }),
         loginByGoogle: builder.mutation<IAuthResponse, string>({
@@ -72,27 +77,8 @@ export const apiAccount = createApi({
                 method: 'POST',
                 body: {token}
             }),
-            async onQueryStarted(_arg : any, {dispatch, getState, queryFulfilled}: {
-                dispatch: Dispatch;
-                getState: () => RootState;
-                queryFulfilled: Promise<{ data: IAuthResponse }>;
-            }) {
-                try {
-                    console.log('onQueryStarted');
-                    const {data} = await queryFulfilled;
-                    if (data && data.token) {
-                        dispatch(loginSuccess(data.token));
-                        const localCart = getState().localCart.items;
-                        console.log("Get Root State", localCart);
-                        if (localCart.length > 0) {
-                            await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
-                        }
-                        dispatch(clearCart());
-                    }
-                } catch (error) {
-                    console.error('Auth error:', error);
-                }
-            }
+            onQueryStarted: async (_arg, { dispatch, getState, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch, getState)
         }),
         //запускаємо процедуру відновлення паролю по пошті
         forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
