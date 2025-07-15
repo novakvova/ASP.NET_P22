@@ -2,23 +2,33 @@ import {Link, Outlet} from "react-router";
 import {useAppDispatch, useAppSelector} from "../../store";
 // import {useNavigate} from "react-router-dom";
 import {logout} from "../../store/authSlice.ts";
-import {Badge, Button} from "antd";
+import {Button} from "antd";
 import {APP_ENV} from "../../env";
+import {useCart} from "../../hooks/useCart.ts";
+import {apiCart} from "../../services/apiCart.ts";
+import {addItem} from "../../store/localCartSlice.ts";
+import CartDrawer from "../../components/Cart/CartDrewer";
 
 const UserLayout: React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
-    const {items} = useAppSelector(state => state.cart);
+
+    const { cart } = useCart(user!=null);
 
     const dispatch = useAppDispatch();
-    // const navigate = useNavigate();
-    // function logoutUser() {
-    //     // console.log("logoutUser");
-    //     dispatch(logout());
-    //     navigate('/');
-    //
-    // }
 
     // console.log("items", items);
+    const logoutHandler = async () => {
+        // if (!serverCart?.items) return;
+
+        const serverCart = [...cart];
+        dispatch(logout());
+        console.log('Server cart', serverCart);
+        dispatch(apiCart.util.resetApiState()); // очищення кешу запитів кошика
+        console.log('Server cart', serverCart);
+        serverCart.forEach(item => {
+            dispatch(addItem(item));
+        });
+    }
 
 
     return (
@@ -27,9 +37,7 @@ const UserLayout: React.FC = () => {
                 <h1 className="text-xl font-semibold">FoodDelivery</h1>
 
                 <div className="flex items-center gap-4">
-                    <Badge count={items.length} showZero>
-                        <Button>Кошик</Button>
-                    </Badge>
+                    <CartDrawer />
                     {user ? (
                         <>
                             <Link to="/account" className="flex items-center gap-2">
@@ -50,7 +58,7 @@ const UserLayout: React.FC = () => {
 
 
                             <Button
-                                onClick={() => dispatch(logout())}
+                                onClick={() => logoutHandler()}
                                 className="bg-white text-orange-500 border-none hover:bg-orange-100"
                             >
                                 Вихід

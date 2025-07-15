@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Form, type FormProps, Input } from 'antd';
 import {type ILoginRequest, useLoginByGoogleMutation, useLoginMutation} from "../../../services/apiAccount.ts";
-import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
-import {useAppDispatch} from "../../../store";
+// import {getUserFromToken, loginSuccess} from "../../../store/authSlice.ts";
+// import {useAppDispatch} from "../../../store";
 
 import { useGoogleLogin } from '@react-oauth/google';
 import LoadingOverlay from "../../../components/ui/loading/LoadingOverlay.tsx";
@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
     const [login, { isLoading: isLoginLoading }] = useLoginMutation();
     const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     // const [form] = Form.useForm<ILogin>();
@@ -23,18 +23,19 @@ const LoginPage: React.FC = () => {
 
     const onFinish: FormProps<ILoginRequest>["onFinish"] = async (values) => {
         try {
-            const response = await login(values).unwrap();
-            const { token } = response;
-            dispatch(loginSuccess(token));
-
-            const user = getUserFromToken(token);
-            console.log("user", user);
-            if (!user || !user.roles.includes("Admin")) {
-                navigate('/');
-            }
-            else {
-                navigate('/admin/home');
-            }
+            await login(values).unwrap();
+            navigate('/');
+            // const { token } = response;
+            // dispatch(loginSuccess(token));
+            //
+            // const user = getUserFromToken(token);
+            // console.log("user", user);
+            // if (!user || !user.roles.includes("Admin")) {
+            //     navigate('/');
+            // }
+            // else {
+            //     navigate('/admin/home');
+            // }
         } catch (err) {
             console.log("error", err);
             alert("Login failed");
@@ -45,8 +46,8 @@ const LoginPage: React.FC = () => {
         onSuccess: async (tokenResponse) =>
         {
             try {
-                const result = await loginByGoogle(tokenResponse.access_token).unwrap();
-                dispatch(loginSuccess(result.token));
+                await loginByGoogle(tokenResponse.access_token).unwrap();
+                // dispatch(loginSuccess(result.token));
                 navigate('/');
             } catch (error) {
 

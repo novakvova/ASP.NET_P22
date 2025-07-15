@@ -19,8 +19,19 @@ namespace WebApiPizushi.Controllers
             return Ok();
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddRange([FromBody] List<CartCreateUpdateModel> modelItems)
+        {
+            foreach (var item in modelItems)
+            {
+                await cartService.CreateUpdate(item);
+            }
+            return Ok();
+        }
+
         [HttpGet]
-        public async Task<IActionResult> GetItems()
+        public async Task<IActionResult> GetCart()
         {
             var model =  await cartService.GetCartItems();
             return Ok(model);

@@ -40,6 +40,10 @@ export interface IRegister
     imageFile: string;
 }
 
+export interface IAuthResponse {
+    token: string;
+}
+
 export interface CategoryItemModel {
     id: number;
     name: string;
