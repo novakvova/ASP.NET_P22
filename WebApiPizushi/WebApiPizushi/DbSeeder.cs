@@ -1,13 +1,14 @@
-﻿using System.Text.Json;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using Core.Constants;
-using Domain;
-using Domain.Entities;
-using Domain.Entities.Identity;
 using Core.Interfaces;
 using Core.Models.Seeder;
+using Domain;
+using Domain.Entities;
+using Domain.Entities.Delivery;
+using Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace WebApiPizushi;
 
@@ -355,6 +356,48 @@ public static class DbSeeder
                 context.OrderItems.AddRange(orderItems);
             }
 
+            await context.SaveChangesAsync();
+        }
+
+        if (!context.Cities.Any())
+        {
+            var list = new List<CityEntity>
+            {
+                new CityEntity { Name = "Київ" },
+                new CityEntity { Name = "Львів" },
+                new CityEntity { Name = "Одеса" },
+                new CityEntity { Name = "Харків" },
+                new CityEntity { Name = "Дніпро" }
+            };
+
+            await context.Cities.AddRangeAsync(list);
+            await context.SaveChangesAsync();
+        }
+
+        if (!context.PostDepartments.Any())
+        {
+            var list = new List<PostDepartmentEntity>
+            {
+                new PostDepartmentEntity { Name = "Відділення №1" },
+                new PostDepartmentEntity { Name = "Відділення №2" },
+                new PostDepartmentEntity { Name = "Відділення №3" },
+                new PostDepartmentEntity { Name = "Відділення №4" },
+                new PostDepartmentEntity { Name = "Відділення №5" }
+            };
+
+            await context.PostDepartments.AddRangeAsync(list);
+            await context.SaveChangesAsync();
+        }
+
+        if (!context.PaymentTypes.Any())
+        {
+            var list = new List<PaymentTypeEntity>
+            {
+                new PaymentTypeEntity { Name = "Готівка" },
+                new PaymentTypeEntity { Name = "Картка" }
+            };
+
+            await context.PaymentTypes.AddRangeAsync(list);
             await context.SaveChangesAsync();
         }
     }

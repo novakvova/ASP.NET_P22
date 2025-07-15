@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Delivery;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,6 +24,12 @@ public class AppDbPizushiContext : IdentityDbContext<UserEntity, RoleEntity, lon
     public DbSet<OrderStatusEntity> OrderStatuses { get; set; }
     public DbSet<OrderEntity> Orders { get; set; }
     public DbSet<OrderItemEntity> OrderItems { get; set; }
+
+    public DbSet<CityEntity> Cities { get; set; }
+    public DbSet<PostDepartmentEntity> PostDepartments { get; set; }
+    public DbSet<PaymentTypeEntity> PaymentTypes { get; set; }
+    public DbSet<DeliveryInfoEntity> DeliveryInfos { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder builder)
