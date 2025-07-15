@@ -51,7 +51,7 @@ export const apiCart = createApi({
                 try {
                     return {
                         url: `removeCartItem/${id}`,
-                        method: 'PUT'
+                        method: 'DELETE'
                     };
                 } catch {
                     throw new Error('Error remove item from cart');
