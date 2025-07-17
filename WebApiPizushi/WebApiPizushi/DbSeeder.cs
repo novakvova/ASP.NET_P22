@@ -22,6 +22,7 @@ public static class DbSeeder
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RoleEntity>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
+        var novaPosta = scope.ServiceProvider.GetRequiredService<INovaPoshtaService>();
 
         context.Database.Migrate();
 
@@ -359,35 +360,49 @@ public static class DbSeeder
             await context.SaveChangesAsync();
         }
 
-        if (!context.Cities.Any())
-        {
-            var list = new List<CityEntity>
-            {
-                new CityEntity { Name = "Київ" },
-                new CityEntity { Name = "Львів" },
-                new CityEntity { Name = "Одеса" },
-                new CityEntity { Name = "Харків" },
-                new CityEntity { Name = "Дніпро" }
-            };
 
-            await context.Cities.AddRangeAsync(list);
-            await context.SaveChangesAsync();
-        }
+        //if (!context.Cities.Any())
+        //{
+        //    await novaPosta.FetchCitiesAsync();
+        //}
+
 
         if (!context.PostDepartments.Any())
         {
-            var list = new List<PostDepartmentEntity>
-            {
-                new PostDepartmentEntity { Name = "Відділення №1" },
-                new PostDepartmentEntity { Name = "Відділення №2" },
-                new PostDepartmentEntity { Name = "Відділення №3" },
-                new PostDepartmentEntity { Name = "Відділення №4" },
-                new PostDepartmentEntity { Name = "Відділення №5" }
-            };
-
-            await context.PostDepartments.AddRangeAsync(list);
-            await context.SaveChangesAsync();
+            await novaPosta.FetchDepartmentsAsync();
         }
+
+        Console.WriteLine("Seed Is good");
+
+        //if (!context.Cities.Any())
+        //{
+        //    var list = new List<CityEntity>
+        //    {
+        //        new CityEntity { Name = "Київ" },
+        //        new CityEntity { Name = "Львів" },
+        //        new CityEntity { Name = "Одеса" },
+        //        new CityEntity { Name = "Харків" },
+        //        new CityEntity { Name = "Дніпро" }
+        //    };
+
+        //    await context.Cities.AddRangeAsync(list);
+        //    await context.SaveChangesAsync();
+        //}
+
+        //if (!context.PostDepartments.Any())
+        //{
+        //    var list = new List<PostDepartmentEntity>
+        //    {
+        //        new PostDepartmentEntity { Name = "Відділення №1" },
+        //        new PostDepartmentEntity { Name = "Відділення №2" },
+        //        new PostDepartmentEntity { Name = "Відділення №3" },
+        //        new PostDepartmentEntity { Name = "Відділення №4" },
+        //        new PostDepartmentEntity { Name = "Відділення №5" }
+        //    };
+
+        //    await context.PostDepartments.AddRangeAsync(list);
+        //    await context.SaveChangesAsync();
+        //}
 
         if (!context.PaymentTypes.Any())
         {

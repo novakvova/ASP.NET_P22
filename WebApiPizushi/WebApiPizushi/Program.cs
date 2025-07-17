@@ -44,6 +44,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ISmtpService, SmtpService>();
@@ -56,6 +58,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddScoped<INovaPoshtaService, NovaPoshtaService>();
 
 //Щоб отримати доступ до HttpContext в сервісах
 builder.Services.AddHttpContextAccessor();
