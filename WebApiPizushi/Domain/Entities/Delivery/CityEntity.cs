@@ -8,4 +8,5 @@ public class CityEntity : BaseEntity<long>
     public string Name { get; set; } = string.Empty;
 
     public ICollection<DeliveryInfoEntity>? DeliveryInfos { get; set; }
+    public ICollection<PostDepartmentEntity>? PostDepartments { get; set; }
 }
