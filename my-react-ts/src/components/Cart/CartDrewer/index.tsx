@@ -4,6 +4,7 @@ import {useState} from "react";
 import {type ICartItem} from "../../../store/localCartSlice.ts";
 import {APP_ENV} from "../../../env";
 import {useCart} from "../../../hooks/useCart.ts";
+import OrderForm from "../orderForm";
 
 const {Text} = Typography;
 
@@ -13,6 +14,10 @@ const CartDrawer: React.FC = () => {
     const {user} = useAppSelector(state => state.auth);
 
     const {cart, addToCart, removeFromCart} = useCart(user != null);
+
+    const handlerCloseOrderForm = () => {
+        setOpen(false);
+    }
 
     return (
         <>
@@ -82,17 +87,13 @@ const CartDrawer: React.FC = () => {
                         </List.Item>
                     )}
                 />
-
                 <Divider/>
 
-                <div
-                    style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
-                >
-                    <Button type="primary" disabled={cart.length === 0}>
-                        Оформити замовлення
-                    </Button>
-                </div>
+                <OrderForm onClose={handlerCloseOrderForm} />
+
             </Drawer>
+
+
         </>
     );
 };
