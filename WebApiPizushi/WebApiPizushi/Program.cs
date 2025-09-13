@@ -13,6 +13,7 @@ using Core.Interfaces;
 using Core.Services;
 using Core.Models.Account;
 using Core.Extensions;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,6 +119,12 @@ builder.Services.AddSwaggerGen(opt =>
         }
     });
 
+});
+
+builder.Services.AddQuartz();
+builder.Services.AddQuartzHostedService(opt =>
+{
+    opt.WaitForJobsToComplete = true; 
 });
 
 builder.Services.AddCors();
