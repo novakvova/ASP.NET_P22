@@ -1,0 +1,45 @@
+version: "3.9"
+networks:
+  myAppNetwork:
+    driver: bridge
+
+services:
+  db:
+    container_name: pg-container
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Pg#2025!Db$Secure7
+      POSTGRES_DB: pizushidb
+    volumes:
+      - /data/pizushi/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - myAppNetwork
+    restart: unless-stopped
+  app:
+    container_name: pizushi-api-container
+    image: novakvova/pizushi-api
+    ports:
+      - "5801:8080"  
+    networks:
+      - myAppNetwork
+    volumes:
+      - /data/pizushi/images:/app/images
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    environment:
+        ConnectionStrings__DefaultConnection: "Host=db;Database=pizushidb;Username=postgres;Password=Pg#2025!Db$Secure7"
+
+  client:
+    container_name: pizushi-client-container
+    image: novakvova/pizushi-client
+    restart: on-failure
+    ports:
+      - "4080:80"  
+    networks:
+      - myAppNetwork
+
