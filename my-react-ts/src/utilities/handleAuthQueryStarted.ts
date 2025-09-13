@@ -20,6 +20,7 @@ export const handleAuthQueryStarted = async (_arg : any,
             const localCart = getState().localCart.items;
             console.log("Get Root State", localCart);
             if (localCart.length > 0) {
+                //@ts-ignore
                 await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
             }
             dispatch(clearCart());

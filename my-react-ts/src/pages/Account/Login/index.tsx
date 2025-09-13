@@ -45,6 +45,7 @@ const LoginPage: React.FC = () => {
     const loginUseGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) =>
         {
+            console.log("tokenResponse", tokenResponse.access_token);
             try {
                 await loginByGoogle(tokenResponse.access_token).unwrap();
                 // dispatch(loginSuccess(result.token));

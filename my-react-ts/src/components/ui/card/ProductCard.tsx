@@ -1,6 +1,6 @@
 import {Card, Col, Tooltip, Image} from 'antd';
 import {APP_ENV} from "../../../env";
-import {useAppDispatch, useAppSelector} from "../../../store";
+import {useAppSelector} from "../../../store";
 import type {ICartItem} from "../../../store/localCartSlice.ts";
 import {useCart} from "../../../hooks/useCart.ts";
 

@@ -76,6 +76,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
                     onFinish={onFinish}
                     initialValues={{
                         recipientName: user?.name || '',
+                        //@ts-ignore
                         phoneNumber: user?.phone || '',
                     }}
                 >
@@ -97,6 +98,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
 
                     <Form.Item<ICreateOrderItem>
                         label="Місто"
+                        //@ts-ignore
                         name="cityId"
                         rules={[{ required: true, message: "Оберіть місто" }]}
                     >

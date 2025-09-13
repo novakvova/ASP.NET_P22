@@ -45,6 +45,7 @@ const handleAuthSuccess = async (
 
             const localCart = getState().localCart.items;
             if (localCart.length > 0) {
+                //@ts-ignore
                 await dispatch(apiCart.endpoints.addToCartsRange.initiate(localCart)).unwrap();
             }
 
