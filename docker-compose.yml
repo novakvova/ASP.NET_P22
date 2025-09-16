@@ -22,7 +22,7 @@ services:
     container_name: pizushi-api-container
     image: novakvova/pizushi-api
     ports:
-      - "5801:8080"  
+      - "3002:8080"  
     networks:
       - myAppNetwork
     volumes:
@@ -39,7 +39,7 @@ services:
     image: novakvova/pizushi-client
     restart: on-failure
     ports:
-      - "4080:80"  
+      - "3001:80"  
     networks:
       - myAppNetwork
 
