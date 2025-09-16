@@ -14,7 +14,6 @@ RUN dotnet publish -c Release -o /app
 # Stage 2: Final image for runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 
-# Встановлюємо необхідні пакети для підключення до PostgreSQL
 WORKDIR /app
 
 # Копіюємо додаток з етапу побудови
