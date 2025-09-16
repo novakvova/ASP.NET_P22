@@ -1,4 +1,8 @@
-using System.Text;
+using Core.Extensions;
+using Core.Interfaces;
+using Core.Models.Account;
+using Core.Services;
+using Domain;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -6,14 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WebApiPizushi;
-using Domain;
-using WebApiPizushi.Filters;
-using Core.Interfaces;
-using Core.Services;
-using Core.Models.Account;
-using Core.Extensions;
 using Quartz;
+using System.Text;
+using WebApiPizushi;
+using WebApiPizushi.Filters;
+using WebApiPizushi.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<INovaPoshtaService, NovaPoshtaService>();
+builder.Services.AddScoped<IDbSeederService, DbSeederService>();
 
 //Щоб отримати доступ до HttpContext в сервісах
 builder.Services.AddHttpContextAccessor();
@@ -121,7 +123,16 @@ builder.Services.AddSwaggerGen(opt =>
 
 });
 
-builder.Services.AddQuartz();
+builder.Services.AddQuartz(q => {
+    var jobKey = new JobKey(nameof(DbSeedJob));
+    q.AddJob<DbSeedJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity($"{nameof(DbSeedJob)}-trigger")
+        .StartNow());
+});
+
 builder.Services.AddQuartzHostedService(opt =>
 {
     opt.WaitForJobsToComplete = true; 
@@ -153,6 +164,6 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = $"/{dir}"
 });
 
-await app.SeedData();
+//await app.SeedData();
 
 app.Run();
